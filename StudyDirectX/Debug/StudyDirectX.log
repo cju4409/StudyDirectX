@@ -1,0 +1,7 @@
+﻿  GameEngine.cpp
+  WindowContainer.cpp
+C:\Users\Atents\Desktop\WinAPI\StudyDirectX\StudyDirectX\WindowContainer.cpp(13,2): warning C4065: switch문에 'default'가 있으나 'case' 레이블이 없습니다.
+  WindowFrame.cpp
+  WinMain.cpp
+  코드를 생성하고 있습니다...
+  StudyDirectX.vcxproj -> C:\Users\Atents\Desktop\WinAPI\StudyDirectX\Debug\StudyDirectX.exe

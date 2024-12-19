@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{f28e52ef-538c-4024-a56a-1c2ede51ed07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics">
+      <UniqueIdentifier>{f4c4b677-b4d6-489e-879e-bf043a571a10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -21,11 +27,23 @@
     <ClCompile Include="WindowFrame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\AdapterReader.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Debug.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\Graphics.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="WindowContainer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngine.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Engine\GameEngine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\Shaders.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,8 +53,24 @@
     <ClInclude Include="WindowContainer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameEngine.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Engine\Graphics\AdapterReader.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Debug.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Graphics.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameEngine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Shaders.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="vs.hlsl" />
+    <FxCompile Include="ps.hlsl" />
   </ItemGroup>
 </Project>

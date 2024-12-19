@@ -5,7 +5,14 @@
       <FullPath>C:\Users\Atents\Desktop\WinAPI\StudyDirectX\Debug\StudyDirectX.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\Atents\Desktop\WinAPI\StudyDirectX\Debug\ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\Atents\Desktop\WinAPI\StudyDirectX\Debug\vs.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

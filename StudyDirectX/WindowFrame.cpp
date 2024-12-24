@@ -15,7 +15,7 @@ LRESULT CALLBACK MessageProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp) {
 		//WM_NCCREATE :윈도우 생성될때 가장 먼저 발생하는 메시지
 	case WM_NCCREATE:
 	{
-		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lp);
+;		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lp);
 		WindowContainer* pWin = reinterpret_cast<WindowContainer*>(pCreate->lpCreateParams);
 		if (pWin == nullptr) {
 			exit(-1);

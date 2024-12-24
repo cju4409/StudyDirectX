@@ -156,16 +156,23 @@
     <ClCompile Include="Engine\GameEngine.cpp" />
     <ClCompile Include="Engine\Graphics\Graphics.cpp" />
     <ClCompile Include="Engine\Graphics\Shaders.cpp" />
+    <ClCompile Include="Engine\Input\KeyboardEvent.cpp" />
+    <ClCompile Include="Engine\Input\Keyboard.cpp" />
     <ClCompile Include="WindowContainer.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Graphics\ConstantBufferTypes.h" />
+    <ClInclude Include="Engine\Graphics\Buffers.h" />
     <ClInclude Include="Engine\Debug.h" />
     <ClInclude Include="Engine\Graphics\AdapterReader.h" />
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Graphics\Graphics.h" />
     <ClInclude Include="Engine\Graphics\Shaders.h" />
+    <ClInclude Include="Engine\Graphics\Vertex.h" />
+    <ClInclude Include="Engine\Input\KeyboardEvent.h" />
+    <ClInclude Include="Engine\Input\Keyboard.h" />
     <ClInclude Include="WindowContainer.h" />
     <ClInclude Include="WindowFrame.h" />
   </ItemGroup>

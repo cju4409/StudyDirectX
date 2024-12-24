@@ -10,5 +10,6 @@ public:
     bool Initialize(HINSTANCE hInst, wstring title, wstring winClass, int w, int h);
     bool ProcessMessage();
     void Render();
+    void Update();
 };
 

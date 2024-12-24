@@ -1,5 +1,7 @@
 #include "Graphics.h"
 #include "../Debug.h"
+//텍스쳐 불러옴
+#include <WICTextureLoader.h>
 
 
 // 렌더링 파이프라인에서
@@ -76,7 +78,70 @@ bool Graphics::InitializeDirectX(HWND hWnd, int w, int h)
 		return false;
 	}
 
-	dc->OMSetRenderTargets(1, rtv.GetAddressOf(), nullptr);
+
+	//뷰포트 설정
+	D3D11_VIEWPORT vp{};
+	vp.Width = w;
+	vp.Height = h;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+
+	dc->RSSetViewports(1, &vp);
+
+	//Create Sampler State
+	D3D11_SAMPLER_DESC samDesc{};
+	//LINEAR:약간 흐릿하게 표현. 픽셀깨짐 X
+	//POINT: 선명하게 표현
+	samDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	// D3D11_TEXTURE_ADDRESS_WRAP : 그림이 이어져서 여러개 나옴
+	// D3D11_TEXTURE_ADDRESS_CLAMP : 그림이 한번만 나옴
+	// D3D11_TEXTURE_ADDRESS_MIRROR : 그림의 방향이 뒤집혀서 이어져서 여러개 나옴
+	samDesc.AddressU = samDesc.AddressV = samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samDesc.MinLOD = 0;
+	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	hr = device->CreateSamplerState(&samDesc, sam.GetAddressOf());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"샘플러 스테이트 생성을 실패했습니다.");
+		return false;
+	}
+
+	//깊이버퍼
+	D3D11_DEPTH_STENCIL_DESC dsDesc{};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+	hr = device->CreateDepthStencilState(&dsDesc, dss.GetAddressOf());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"뎁스 스텐실 스테이트 생성을 실패했습니다.");
+		return false;
+	}
+
+	D3D11_TEXTURE2D_DESC dsbDesc{};
+	dsbDesc.Width = w;
+	dsbDesc.Height = h;
+	dsbDesc.MipLevels = 1;
+	dsbDesc.ArraySize = 1;
+	dsbDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsbDesc.SampleDesc.Count = 1;
+	dsbDesc.SampleDesc.Quality = 0;
+	dsbDesc.Usage = D3D11_USAGE_DEFAULT;
+	dsbDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	dsbDesc.CPUAccessFlags = 0;
+	dsbDesc.MiscFlags = 0;
+
+	hr = device->CreateTexture2D(&dsbDesc, nullptr, dsb.GetAddressOf());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"뎁스 스텐실 버퍼 생성을 실패했습니다.");
+		return false;
+	}
+
+	hr = device->CreateDepthStencilView(dsb.Get(), nullptr, dsv.GetAddressOf());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"뎁스 스텐실 뷰 생성을 실패했습니다.");
+		return false;
+	}
+	dc->OMSetRenderTargets(1, rtv.GetAddressOf(), dsv.Get());
 
 	return true;
 }
@@ -102,7 +167,13 @@ bool Graphics::InitializeShaders()
 }
 #endif
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0,0,
+		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0},
+		// 12 적힌곳 => 버퍼에 저장하기 시작지점. (x,y,z) 4*3 = 12. 포지션이 12바이트라서
+		// D3D11_APPEND_ALIGNED_ELEMENT: 자동으로 시작지점 알려줌
+		{"COLOR", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,
+		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"TEXCOORD", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
 		D3D11_INPUT_CLASSIFICATION::D3D11_INPUT_PER_VERTEX_DATA,0}
 	};
 
@@ -115,18 +186,97 @@ bool Graphics::InitializeShaders()
 	return true;
 }
 
+void Graphics::InitializeScene()
+{
+	Vertex v[] = {
+		Vertex({-0.5f, -0.5f, 0.0f},{1,1,1,1}, {0,1}),
+		Vertex({-0.5f,  0.5f, 0.0f},{1,1,1,1}, {0,0}),
+		Vertex({ 0.5f,  0.5f, 0.0f},{0,0,0,1}, {1,0}),
+		Vertex({ 0.5f, -0.5f, 0.0f},{0,0,0,1}, {1,1})
+
+		//Vertex({-0.5f, -0.5f, 0.0f},{1,0,0,1}),
+		//Vertex({0.0f, 0.5f, 0.0f},{0,1,0,1}),
+		//Vertex({0.5f, -0.5f, 0.0f},{0,0,1,1})
+	};
+
+
+	HRESULT hr = vb.Initialize(device.Get(), v, ARRAYSIZE(v));
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"버텍스 버퍼 생성을 실패했습니다.");
+	}
+
+
+	Vertex v2[] = {
+		Vertex({-0.5f + 0.25f, -0.5f, 0.5f},{1,0,0,1}, {0,1}),
+		Vertex({-0.5f + 0.25f,  0.5f, 0.5f},{1,0,0,1}, {0,0}),
+		Vertex({ 0.5f + 0.25f,  0.5f, 0.5f},{1,0,0,1}, {1,0}),
+		Vertex({ 0.5f + 0.25f, -0.5f, 0.5f},{1,0,0,1}, {1,1})
+	};
+	hr = vb2.Initialize(device.Get(), v2, ARRAYSIZE(v2));
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"버텍스 버퍼2 생성을 실패했습니다.");
+	}
+
+	DWORD idx[] = {
+		0,1,2,
+		0,2,3
+	};
+
+	hr = ib.Initialize(device.Get(), idx, ARRAYSIZE(idx));
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"인덱스 버퍼 생성을 실패했습니다.");
+	}
+
+	hr = cb.Initialize(device.Get(), dc.Get());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"콘스탄트 버퍼 생성을 실패했습니다.");
+	}
+
+	hr = CreateWICTextureFromFile(device.Get(), L"Assets/Textures/texture.png", nullptr,
+		tex.GetAddressOf());
+	if (FAILED(hr)) {
+		Debug::Error(hr, L"텍스쳐 로딩을 실패했습니다.");
+	}
+}
+
 bool Graphics::Initialize(HWND hWnd, int w, int h)
 {
-	if (!InitializeDirectX(hWnd, w, h))return false;
+	if (!InitializeDirectX(hWnd, w, h)) return false;
+	InitializeScene();
 	return InitializeShaders();
 }
 
 void Graphics::Render()
 {
-	float bgColor[] = { 0,0,0,1 };
+	float bgColor[] = { 0.3f,0.4f,0.9f,1 };
+	// 원래 그려져있던 것을 지워줌
 	dc->ClearRenderTargetView(rtv.Get(), bgColor);
+	dc->ClearDepthStencilView(dsv.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+	//인풋어셈블러
+	UINT offset = 0;
+	dc->IASetInputLayout(vs.GetInputLayout());
+	dc->IASetVertexBuffers(0, 1, vb.GetAddressOf(), vb.StridePtr(), &offset);
+	dc->IASetIndexBuffer(ib.Get(), DXGI_FORMAT_R32_UINT, 0);
+	//콘스탄트 버퍼
+	cb.Update();
+	dc->VSSetConstantBuffers(0, 1, cb.GetAddressOf());
+
+	//버텍스셰이더
+	dc->VSSetShader(vs.GetShader(), nullptr, 0);
 	//레스터라이저 스테이트 설정
 	dc->RSSetState(rs.Get());
+	//픽셀셰이더
+	dc->PSSetShader(ps.GetShader(), nullptr, 0);
+	dc->PSSetShaderResources(0, 1, tex.GetAddressOf());
+	dc->PSSetSamplers(0, 1, sam.GetAddressOf());
+
+	dc->OMSetDepthStencilState(dss.Get(), 0);
+	//드로우콜
+	dc->DrawIndexed(ib.Size(), 0, 0);
+
+	offset = 0;
+	dc->IASetVertexBuffers(0, 1, vb2.GetAddressOf(), vb2.StridePtr(), &offset);
+	dc->DrawIndexed(ib.Size(), 0, 0);
 
 	swap->Present(1, 0);
 }

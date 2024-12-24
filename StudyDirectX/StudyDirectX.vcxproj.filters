@@ -19,6 +19,9 @@
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{f4c4b677-b4d6-489e-879e-bf043a571a10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Input">
+      <UniqueIdentifier>{6fa76031-9867-4b14-8d1c-f464ca8ca9f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -45,6 +48,12 @@
     <ClCompile Include="Engine\Graphics\Shaders.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Input\KeyboardEvent.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Input\Keyboard.cpp">
+      <Filter>Engine\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowFrame.h">
@@ -66,6 +75,21 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Shaders.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Vertex.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Buffers.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Input\KeyboardEvent.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Input\Keyboard.h">
+      <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ConstantBufferTypes.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -158,6 +158,8 @@
     <ClCompile Include="Engine\Graphics\Shaders.cpp" />
     <ClCompile Include="Engine\Input\KeyboardEvent.cpp" />
     <ClCompile Include="Engine\Input\Keyboard.cpp" />
+    <ClCompile Include="Engine\Input\MouseEvent.cpp" />
+    <ClCompile Include="Engine\Input\Mouse.cpp" />
     <ClCompile Include="WindowContainer.cpp" />
     <ClCompile Include="WindowFrame.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -173,6 +175,8 @@
     <ClInclude Include="Engine\Graphics\Vertex.h" />
     <ClInclude Include="Engine\Input\KeyboardEvent.h" />
     <ClInclude Include="Engine\Input\Keyboard.h" />
+    <ClInclude Include="Engine\Input\MouseEvent.h" />
+    <ClInclude Include="Engine\Input\Mouse.h" />
     <ClInclude Include="WindowContainer.h" />
     <ClInclude Include="WindowFrame.h" />
   </ItemGroup>

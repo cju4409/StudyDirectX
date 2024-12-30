@@ -89,6 +89,12 @@ void GameEngine::Update()
 			wstring debugOut = L"X:" + to_wstring(e.GetPos().x) + L", Y:" + to_wstring(e.GetPos().y) + L"\n";
 			OutputDebugString(debugOut.c_str());
 			temp = L"MoveRaw";
+
+			//카메라 회전 코드. 마우스 우클릭 후 마우스 움직임
+			if (mouse.IsRightDown()) {
+				gfx.cam.Rotate(e.GetPos().y * 0.01f, e.GetPos().x * 0.01f, 0);
+			}
+
 			break;
 		}
 
@@ -102,10 +108,22 @@ void GameEngine::Update()
 
 		SetWindowText(window.GetHandle(), temp.c_str());
 	}
-	if (keyboard.KeyIsPressed(VK_LEFT)) {
-		gfx.cb.data.Offset.x -= 0.01f;
+	if (keyboard.KeyIsPressed('A')) {
+		gfx.cam.Translate(-0.01f, 0, 0);
 	}
-	if (keyboard.KeyIsPressed(VK_RIGHT)) {
-		gfx.cb.data.Offset.x += 0.01f;
+	if (keyboard.KeyIsPressed('D')) {
+		gfx.cam.Translate(0.01f, 0, 0);
+	}
+	if (keyboard.KeyIsPressed('W')) {
+		gfx.cam.Translate(0, 0, 0.01f);
+	}
+	if (keyboard.KeyIsPressed('S')) {
+		gfx.cam.Translate(0, 0, -0.01f);
+	}
+	if (keyboard.KeyIsPressed('Q')) {
+		gfx.cam.Translate(0, 0.01f, 0);
+	}
+	if (keyboard.KeyIsPressed('E')) {
+		gfx.cam.Translate(0, -0.01f, 0);
 	}
 }

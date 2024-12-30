@@ -11,3 +11,7 @@ using namespace DirectX;
 struct CB_VS_Transform {
 	XMFLOAT2 Offset;
 };
+
+struct CB_VS_VIEWPROJ {
+	XMMATRIX viewProj;
+};

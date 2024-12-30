@@ -4,9 +4,11 @@
 #include "Buffers.h"
 #include "Vertex.h"
 #include "ConstantBufferTypes.h"
+#include "Camera.h"
 
 class Graphics
 {
+	int ScreenWidth, ScreenHeight;
 	ComPtr<ID3D11Device> device;
 	ComPtr<ID3D11DeviceContext> dc;
 	ComPtr<IDXGISwapChain> swap;
@@ -25,7 +27,6 @@ class Graphics
 	PixelShader ps;
 
 	VertexBuffer<Vertex> vb;
-	VertexBuffer<Vertex> vb2;
 	IndexBuffer<DWORD> ib;
 
 	ComPtr<ID3D11ShaderResourceView> tex;
@@ -35,7 +36,8 @@ class Graphics
 	bool InitializeShaders();
 	void InitializeScene();
 public:
-	ConstantBuffer<CB_VS_Transform> cb;
+	Camera cam;
+	ConstantBuffer<CB_VS_VIEWPROJ> cb;
 	bool Initialize(HWND hWnd, int w, int h);
 	void Render();
 };

@@ -164,7 +164,7 @@ bool Graphics::InitializeShaders()
 #else //Win32 (x86)
 		shaderFolder = L"../Release/";
 #endif
-}
+	}
 #endif
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
 		{"POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -205,18 +205,6 @@ void Graphics::InitializeScene()
 		Debug::Error(hr, L"버텍스 버퍼 생성을 실패했습니다.");
 	}
 
-
-	Vertex v2[] = {
-		Vertex({-0.5f + 0.25f, -0.5f, 0.5f},{1,0,0,1}, {0,1}),
-		Vertex({-0.5f + 0.25f,  0.5f, 0.5f},{1,0,0,1}, {0,0}),
-		Vertex({ 0.5f + 0.25f,  0.5f, 0.5f},{1,0,0,1}, {1,0}),
-		Vertex({ 0.5f + 0.25f, -0.5f, 0.5f},{1,0,0,1}, {1,1})
-	};
-	hr = vb2.Initialize(device.Get(), v2, ARRAYSIZE(v2));
-	if (FAILED(hr)) {
-		Debug::Error(hr, L"버텍스 버퍼2 생성을 실패했습니다.");
-	}
-
 	DWORD idx[] = {
 		0,1,2,
 		0,2,3
@@ -237,10 +225,15 @@ void Graphics::InitializeScene()
 	if (FAILED(hr)) {
 		Debug::Error(hr, L"텍스쳐 로딩을 실패했습니다.");
 	}
+
+	cam.SetPos(0, 0, -2);
+	cam.SetProjection(90.0f, (float)ScreenWidth / (float)ScreenHeight, 0.1f, 1000.0f);
 }
 
 bool Graphics::Initialize(HWND hWnd, int w, int h)
 {
+	ScreenWidth = w;
+	ScreenHeight = h;
 	if (!InitializeDirectX(hWnd, w, h)) return false;
 	InitializeScene();
 	return InitializeShaders();
@@ -258,6 +251,8 @@ void Graphics::Render()
 	dc->IASetVertexBuffers(0, 1, vb.GetAddressOf(), vb.StridePtr(), &offset);
 	dc->IASetIndexBuffer(ib.Get(), DXGI_FORMAT_R32_UINT, 0);
 	//콘스탄트 버퍼
+	//XMMatrixTranspose: 왼손 좌표계를 오른손 좌표계로 변환해줌. 쉐이더에서는 오른손 좌표계를 쓰므로
+	cb.data.viewProj = XMMatrixTranspose(cam.GetViewProjection());
 	cb.Update();
 	dc->VSSetConstantBuffers(0, 1, cb.GetAddressOf());
 
@@ -272,10 +267,6 @@ void Graphics::Render()
 
 	dc->OMSetDepthStencilState(dss.Get(), 0);
 	//드로우콜
-	dc->DrawIndexed(ib.Size(), 0, 0);
-
-	offset = 0;
-	dc->IASetVertexBuffers(0, 1, vb2.GetAddressOf(), vb2.StridePtr(), &offset);
 	dc->DrawIndexed(ib.Size(), 0, 0);
 
 	swap->Present(1, 0);

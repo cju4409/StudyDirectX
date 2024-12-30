@@ -60,6 +60,9 @@
     <ClCompile Include="Engine\Input\Mouse.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Camera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowFrame.h">
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Input\Mouse.h">
       <Filter>Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Camera.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

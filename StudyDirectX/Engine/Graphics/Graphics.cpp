@@ -2,6 +2,7 @@
 #include "../Debug.h"
 //텍스쳐 불러옴
 #include <WICTextureLoader.h>
+#include "../Time.h"
 
 
 // 렌더링 파이프라인에서
@@ -228,6 +229,10 @@ void Graphics::InitializeScene()
 
 	cam.SetPos(0, 0, -2);
 	cam.SetProjection(90.0f, (float)ScreenWidth / (float)ScreenHeight, 0.1f, 1000.0f);
+
+	//스프라이트 폰트
+	spBatch = make_unique<SpriteBatch>(dc.Get());
+	spFont = make_unique<SpriteFont>(device.Get(), L"Assets\\Fonts\\arial.spf");
 }
 
 bool Graphics::Initialize(HWND hWnd, int w, int h)
@@ -236,6 +241,15 @@ bool Graphics::Initialize(HWND hWnd, int w, int h)
 	ScreenHeight = h;
 	if (!InitializeDirectX(hWnd, w, h)) return false;
 	InitializeScene();
+
+	//ImGUI SetUp
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(device.Get(), dc.Get());
+	ImGui::StyleColorsDark();
+
 	return InitializeShaders();
 }
 
@@ -269,5 +283,35 @@ void Graphics::Render()
 	//드로우콜
 	dc->DrawIndexed(ib.Size(), 0, 0);
 
+	//FPS
+	static wstring strFPS = L"FPS: 0";
+	static int fpsCounter = 0;
+	++fpsCounter;
+	static double playTime = 0.0;
+	playTime += Time::DeltaTime();
+	if (playTime >= 1.0) {
+		playTime = 0.0;
+		strFPS = L"FPS: " + to_wstring(fpsCounter);
+		fpsCounter = 0;
+	}
+
+	//Draw Sprite Font
+	spBatch->Begin();
+	spFont->DrawString(spBatch.get(), strFPS.c_str(), XMFLOAT2(0, 0), Colors::White, 0, XMFLOAT2(1, 1));
+	spBatch->End();
+
+	//ImGUI
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	//Create Popup
+	ImGui::Begin("Test");
+	ImGui::Button("Button");
+	ImGui::End();
+	//Draw Call
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	//Present(1,0):모니터의 주사율과 동기화함. 최대 프레임이 정해짐. 수직동기화. 계단현상 방지
 	swap->Present(1, 0);
 }

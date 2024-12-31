@@ -2,10 +2,13 @@
 
 void Camera::UpdateView()
 {
-	XMMATRIX matRot = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+	matRot = XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+	vForward = XMVector3TransformNormal(DEFAULT_FORWARD_VECTOR, matRot);
+	vForward = XMVector3TransformNormal(DEFAULT_RIGHT_VECTOR, matRot);
 	XMVECTOR eyeDir = XMVector3TransformNormal(DEFAULT_FORWARD_VECTOR, matRot);
 	XMVECTOR eyeFocus = vPos + eyeDir;
 	XMVECTOR eyeUp = XMVector3TransformNormal(DEFAULT_UP_VECTOR, matRot);
+	vForward = XMVector3TransformNormal(DEFAULT_UP_VECTOR, matRot);
 	view = XMMatrixLookAtLH(vPos, eyeFocus, eyeUp);
 }
 
@@ -83,25 +86,41 @@ void Camera::SetPos(const XMFLOAT3& pos)
 	SetPos(pos.x, pos.y, pos.z);
 }
 
-void Camera::Translate(const XMVECTOR& deltaVec)
+void Camera::Translate(const XMVECTOR& deltaVec, Space space)
 {
-	vPos += deltaVec;
+	switch (space) {
+	case Space::Self:
+		vPos += XMVector3TransformNormal(deltaVec, matRot);
+		break;
+	case Space::World:
+		vPos += deltaVec;
+		break;
+	}
 	XMStoreFloat3(&pos, vPos);
 	UpdateView();
 }
 
-void Camera::Translate(float x, float y, float z)
+void Camera::Translate(float x, float y, float z, Space space)
 {
-	pos.x += x;
-	pos.y += y;
-	pos.z += z;
-	vPos = XMLoadFloat3(&pos);
+	switch (space)
+	{
+	case Space::Self:
+		vPos += vRight * x + vUp * y + vForward * z;
+		XMStoreFloat3(&pos, vPos);
+		break;
+	case Space::World:
+		pos.x += x;
+		pos.y += y;
+		pos.z += z;
+		vPos = XMLoadFloat3(&pos);
+		break;
+	}
 	UpdateView();
 }
 
-void Camera::Translate(const XMFLOAT3& delta)
+void Camera::Translate(const XMFLOAT3& delta, Space space)
 {
-	Translate(delta.x, delta.y, delta.z);
+	Translate(delta.x, delta.y, delta.z, space);
 }
 
 void Camera::SetRot(const XMVECTOR& rotVec)

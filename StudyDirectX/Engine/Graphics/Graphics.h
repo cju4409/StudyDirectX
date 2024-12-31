@@ -5,6 +5,13 @@
 #include "Vertex.h"
 #include "ConstantBufferTypes.h"
 #include "Camera.h"
+//스프라이트폰트
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
+//ImGUI
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_dx11.h"
+#include "ImGUI/imgui_impl_win32.h"
 
 class Graphics
 {
@@ -31,6 +38,10 @@ class Graphics
 
 	ComPtr<ID3D11ShaderResourceView> tex;
 	ComPtr<ID3D11SamplerState> sam;
+
+	//SpriteFont
+	unique_ptr<SpriteBatch> spBatch;
+	unique_ptr<SpriteFont> spFont;
 
 	bool InitializeDirectX(HWND hWnd, int w, int h);
 	bool InitializeShaders();

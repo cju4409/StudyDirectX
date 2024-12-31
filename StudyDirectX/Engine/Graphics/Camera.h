@@ -2,10 +2,15 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
+enum class Space {
+	Self,
+	World
+};
+
 class Camera {
 	XMFLOAT3 pos, rot;
-	XMVECTOR vPos, vRot; //병렬 프로그래밍을 위한 변수, x,y,z값을 동시에 연산
-	XMMATRIX view, proj;
+	XMVECTOR vPos, vRot, vForward, vRight, vUp; //병렬 프로그래밍을 위한 변수, x,y,z값을 동시에 연산
+	XMMATRIX view, proj, matRot;
 
 	const XMVECTOR DEFAULT_FORWARD_VECTOR = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	const XMVECTOR DEFAULT_UP_VECTOR = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -33,9 +38,9 @@ public:
 	void SetPos(float x, float y, float z);
 	void SetPos(const XMFLOAT3& pos);
 
-	void Translate(const XMVECTOR& deltaVec);
-	void Translate(float x, float y, float z);
-	void Translate(const XMFLOAT3& delta);
+	void Translate(const XMVECTOR& deltaVec, Space space = Space::Self);
+	void Translate(float x, float y, float z, Space space = Space::Self);
+	void Translate(const XMFLOAT3& delta, Space space = Space::Self);
 
 	void SetRot(const XMVECTOR& rotVec);
 	void SetRot(float x, float y, float z);

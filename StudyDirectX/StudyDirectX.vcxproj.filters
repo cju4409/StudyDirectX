@@ -22,6 +22,9 @@
     <Filter Include="Engine\Input">
       <UniqueIdentifier>{6fa76031-9867-4b14-8d1c-f464ca8ca9f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Graphics\ImGUI">
+      <UniqueIdentifier>{42eb31bf-e791-4f48-a814-ae068d1dce72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -60,8 +63,29 @@
     <ClCompile Include="Engine\Input\Mouse.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Time.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui_draw.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui_impl_dx11.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui_impl_win32.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui_tables.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ImGUI\imgui_widgets.cpp">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Graphics\Camera.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,8 +131,35 @@
     <ClInclude Include="Engine\Input\Mouse.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Time.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imgui.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imgui_impl_dx11.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imgui_impl_win32.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imgui_internal.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imstb_rectpack.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imstb_textedit.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imstb_truetype.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ImGUI\imconfig.h">
+      <Filter>Engine\Graphics\ImGUI</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Graphics\Camera.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

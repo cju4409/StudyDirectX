@@ -18,8 +18,10 @@ WindowContainer::WindowContainer()
 	}
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT WindowContainer::WindowProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wp, lp)) return true;
 	switch (msg)
 	{
 	case WM_LBUTTONDOWN:

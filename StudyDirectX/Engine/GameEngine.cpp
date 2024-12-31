@@ -2,6 +2,7 @@
 
 bool GameEngine::Initialize(HINSTANCE hInst, wstring title, wstring winClass, int w, int h)
 {
+	time.Start();
 	if (!window.Initialize(this, hInst, title, winClass, w, h)) return false;
 	return gfx.Initialize(window.GetHandle(), w, h);
 }
@@ -18,6 +19,7 @@ void GameEngine::Render()
 
 void GameEngine::Update()
 {
+	time.UpdateDeltaTime();
 	/*while (!keyboard.KeyBufferIsEmpty())
 	{
 		KeyboardEvent e = keyboard.ReadKey();
